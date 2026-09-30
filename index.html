@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOC 2 Readiness Calculator</title>
+<meta name="description" content="Self-assess your SOC 2 readiness against the AICPA Trust Services Criteria. Free readiness aid by AI Tech Pros.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <h1>SOC 2 Readiness Calculator</h1>
+    <p class="subtitle">Self-assess your controls against the AICPA Trust Services Criteria: 61 criteria across Security, Availability, Processing Integrity, Confidentiality, and Privacy.</p>
+    <p class="disclaimer">Readiness aid only. Not an audit, attestation, CPA opinion, or legal advice. SOC 2 examinations are performed by licensed CPA firms.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="card" id="scope-section" aria-label="Report scope">
+    <h2>1. Set your scope</h2>
+    <p class="muted">Security (the Common Criteria) applies to every SOC 2 examination, so it is always in scope. Add the optional categories your customers and contracts require.</p>
+    <div class="scope-row" id="scope-row"></div>
+    <div class="company-row">
+      <label for="company-name">Company (used in your exported report):</label>
+      <input type="text" id="company-name" placeholder="Acme SaaS Inc." autocomplete="organization">
+    </div>
+  </section>
+
+  <section class="card" id="dashboard" aria-label="Readiness score">
+    <h2>2. Your readiness</h2>
+    <p class="muted">SOC 2 has no official numeric score. This percentage estimates how much of your in-scope criteria you have implemented. It is a readiness estimate, not an audit result.</p>
+    <div class="overall">
+      <div class="overall-num"><span id="overall-pct">0%</span></div>
+      <div class="overall-bar"><div class="overall-fill" id="overall-fill"></div></div>
+      <p class="muted" id="overall-detail">0 of 33 applicable criteria implemented</p>
+    </div>
+    <div class="cat-bars" id="cat-bars"></div>
+    <h3>By series</h3>
+    <div class="table-wrap">
+      <table id="series-table">
+        <thead><tr><th>Series</th><th>Name</th><th>Implemented</th><th>Readiness</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" id="fixfirst-section" aria-label="Fix first list">
+    <h2>3. Fix first</h2>
+    <p class="muted">Critical-priority gaps, ordered first. These are the controls auditors test hardest and where examinations most often fail.</p>
+    <ol class="gap-list" id="critical-gaps"></ol>
+    <details id="high-gaps-details">
+      <summary>Also open: high-priority gaps (<span id="high-gap-count">0</span>)</summary>
+      <ol class="gap-list" id="high-gaps"></ol>
+    </details>
+  </section>
+
+  <section class="card" id="assess-section" aria-label="Self assessment">
+    <h2>4. Assess each criterion</h2>
+    <p class="muted">Mark each in-scope criterion honestly. <strong>Partial</strong> counts as half. <strong>N/A</strong> removes the criterion from your score; use it only when the criterion truly does not apply to your system.</p>
+    <div class="assess-tools">
+      <input type="search" id="criterion-search" placeholder="Search criteria by ID, title, or keyword">
+      <button type="button" id="expand-all" class="btn small">Expand all</button>
+      <button type="button" id="collapse-all" class="btn small">Collapse all</button>
+    </div>
+    <div id="series-groups"></div>
+  </section>
+
+  <section class="card" id="export-section" aria-label="Export">
+    <h2>5. Export your results</h2>
+    <p class="muted">Downloads stay on your device. Your results are only sent to AI Tech Pros if you use the form below.</p>
+    <div class="btn-row">
+      <button type="button" id="export-md" class="btn primary">Download Markdown report</button>
+      <button type="button" id="export-csv" class="btn">Download CSV</button>
+      <button type="button" id="reset-all" class="btn danger">Reset all answers</button>
+    </div>
+    <div id="lead-capture" class="lead-capture">
+      <h3>Get your report reviewed</h3>
+      <p class="muted">Enter your work email and send your results to AI Tech Pros. We will reply with your full report, a read on your biggest gaps, and what a fixed-price readiness sprint would cover. No spam, ever. We never sell your information.</p>
+      <form id="lead-form" class="lead-form" novalidate>
+        <label class="sr-only" for="lead-email">Work email</label>
+        <input type="email" id="lead-email" name="email" placeholder="you@company.com" required autocomplete="email">
+        <button type="submit" class="btn primary" id="lead-submit">Send my results</button>
+      </form>
+      <p class="lead-status" id="lead-status" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="disclaimer">Readiness aid only. Not an audit, attestation, CPA opinion, or legal advice. SOC 2 examinations are performed by licensed CPA firms.</p>
+    <p>Built by AI Tech Pros. Criteria dataset: <a href="https://github.com/nehemiah313/tsc-dataset">github.com/nehemiah313/tsc-dataset</a></p>
+  </div>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
