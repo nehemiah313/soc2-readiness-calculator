@@ -10,7 +10,7 @@ Live: https://nehemiah313.github.io/soc2-readiness-calculator/
 - **Criterion-by-criterion assessment.** Each of the 61 criteria shows its plain-English summary and typical evidence. Mark each Implemented, Partial, Not implemented, or N/A.
 - **Readiness score.** Percentage of applicable criteria implemented (partial counts as half, N/A excluded), with per-category and per-series breakdowns. SOC 2 has no official numeric score, so this is a readiness estimate, not an audit result.
 - **Fix-first list.** Critical-priority gaps (access controls and system operations) surfaced first, then high-priority gaps.
-- **Exports.** Download a Markdown summary report or a CSV of your answers. A "Get your report reviewed" lead-capture form sends results to AI Tech Pros via FormSubmit when a report inbox is configured (see below).
+- **Exports.** Download a Markdown summary report or a CSV of your answers. A "Get your report reviewed" lead-capture form downloads the report and opens a pre-addressed review request in the visitor's mail app when a report inbox is configured (see below).
 - **Search and progress.** Filter criteria by keyword, expand/collapse series groups, per-series progress chips.
 
 ## Data
@@ -25,11 +25,9 @@ At the top of `app.js`:
 const REPORT_INBOX = "n.harvard@aitechpros.ai";
 ```
 
-When set, a "Get your report reviewed" form appears under the exports. The visitor enters their work email; their results are posted to FormSubmit (`https://formsubmit.co/ajax/<inbox>`), which emails the full report plus lead details (company, email, readiness score, gap counts) to the inbox. The visitor's email is remembered in localStorage (`soc2lead`) so returning visitors do not retype it. Set the constant to `""` to hide the form entirely.
+When set, a "Get your report reviewed" form appears under the exports. The visitor enters their work email; their full report downloads immediately, and their mail app opens with a pre-addressed review request to the inbox carrying a results summary (company, email, readiness score, gap counts, top critical gaps). The visitor hits Send in their own mail app, so the lead arrives from their real address with no backend service involved. The visitor's email is remembered in localStorage (`soc2lead`) so returning visitors do not retype it. Set the constant to `""` to hide the form entirely.
 
-One-time setup: the first submission triggers a FormSubmit activation email to the inbox. Click the activation link once; submissions arrive automatically after that.
-
-Privacy copy on the page states the results are sent to AI Tech Pros for follow-up and that the address is never sold.
+Privacy copy on the page states the review request goes to AI Tech Pros for follow-up and that the address is never sold.
 
 ## Rebuild the embedded dataset
 
