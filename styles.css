@@ -97,3 +97,4 @@ th{background:#f2f5fb}
 .lead-status{margin-top:10px;font-size:.92rem;min-height:1.4em;font-weight:600}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
   clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.site-footer .storage-note{font-size:.8rem;margin:0}
