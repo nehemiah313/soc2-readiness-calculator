@@ -1,15 +1,32 @@
 "use strict";
 /* ---------------------------------------------------------------------------
- * Lead capture (no backend).
+ * Lead capture (silent backend).
  * Set REPORT_INBOX to the inbox that receives review requests. When set, a
  * "Get your report reviewed" form appears: the visitor enters their work
- * email, their full Markdown report downloads immediately, and their mail
- * app opens with a pre-addressed review request carrying a results summary.
- * They hit Send; the lead arrives from their own address. Leave "" to hide
- * the form.
+ * email, their full Markdown report downloads immediately, and their email,
+ * score summary, and top gaps are silently POSTed to LEAD_CAPTURE_URL
+ * (a backend failure never blocks the download). Leave "" to hide the form.
  * ------------------------------------------------------------------------- */
 const REPORT_INBOX = "n.harvard@aitechpros.ai";
 const LEAD_STORE_KEY = "soc2lead";
+const LEAD_CAPTURE_URL = "https://leads.aitechpros.ai/capture";
+
+/* Silent lead capture: POSTs the visitor's email, score summary, and top
+ * gaps to the lead-capture endpoint. Fire-and-forget: a backend failure
+ * must never block the visitor's report download. */
+function captureLead(payload) {
+  try {
+    fetch(LEAD_CAPTURE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.assign({
+        page_url: (typeof location !== "undefined" && location.href) || "",
+        hp: ""
+      }, payload)),
+      keepalive: true
+    }).catch(function () { /* never block the download */ });
+  } catch (e) { /* never block the download */ }
+}
 
 function buildLeadSubject(company) {
   return "SOC 2 Readiness Report review request" + (company ? " - " + company : "");
@@ -505,9 +522,20 @@ if (typeof document !== "undefined") {
         const md = buildMarkdown(TSC.criteria, state.scope, state.statuses, score, state.company);
         download("soc2-readiness-report-" + reportDate() + ".md", md, "text/markdown");
         saveLead({ email: visitorEmail });
-        window.location.href = leadMailto(REPORT_INBOX, buildLeadSubject(state.company),
-          buildLeadBody(visitorEmail, state.company, score));
-        statusEl.textContent = "Report downloaded. An email draft just opened: hit Send and we will reply with a read on your biggest gaps. If no draft opened, email your downloaded report to " + REPORT_INBOX + ".";
+        const criticalCount = score.gaps.filter(g => g.priority === "critical").length;
+        captureLead({
+          email: visitorEmail,
+          tool: "soc2-readiness-calculator",
+          score: "Readiness " + score.overall.pct + "% (" + score.overall.earned + " of " +
+            score.overall.applicable + " implemented, " + score.gaps.length + " open gaps, " +
+            criticalCount + " critical)",
+          summary: {
+            company: state.company,
+            topGaps: score.gaps.filter(g => g.priority === "critical").slice(0, 5)
+              .map(g => g.id + ": " + g.title)
+          }
+        });
+        statusEl.textContent = "Report downloaded. Check your inbox: your results summary and next steps are on the way.";
       });
     }
     document.getElementById("reset-all").addEventListener("click", () => {
